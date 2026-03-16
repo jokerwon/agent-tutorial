@@ -12,7 +12,7 @@ import { ChatOpenAI } from '@langchain/openai';
       provide: 'CHAT_MODEL',
       useFactory(configService: ConfigService) {
         return new ChatOpenAI({
-          modelName: configService.get<string>('OPENAI_MODEL', 'gpt-3.5-turbo'),
+          modelName: configService.get<string>('OPENAI_MODEL'),
           temperature: 0.7,
           apiKey: configService.get<string>('OPENAI_API_KEY'),
         });
