@@ -4,6 +4,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'LangChain.js Tutorial',
   description: '从零开始学习 LangChain.js Agent 开发的完整指南',
+  srcExclude: ['ge-doc-prompt.md'],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     // nav: [{ text: '首页', link: '/' }],
