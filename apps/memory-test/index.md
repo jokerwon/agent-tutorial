@@ -40,9 +40,9 @@ Memory 模块不需要特殊的模型配置,使用常规的 Chat 模型即可。
 import { BaseChatMessageHistory } from '@langchain/core/chat_history'
 
 // 核心方法
-await history.addMessage(message)      // 添加消息
-await history.getMessages()            // 获取所有消息
-await history.clear()                  // 清空历史
+await history.addMessage(message) // 添加消息
+await history.getMessages() // 获取所有消息
+await history.clear() // 清空历史
 ```
 
 ### 消息类型
@@ -70,7 +70,7 @@ LangChain 提供了四种主要的记忆管理策略:
 
 ### 示例 1:内存存储(InMemory)
 
-最��础的记忆方式,将对话保存在内存中:
+最基础的记忆方式,将对话保存在内存中:
 
 ```typescript
 import 'dotenv/config'
@@ -337,7 +337,7 @@ async function summarizeHistory(messages) {
     aiPrefix: '助手',
   })
 
-  const summaryPrompt = `请总结以下对话的核心内容,保留重要��息:
+  const summaryPrompt = `请总结以下对话的核心内容,保留重要信息:
 
 ${conversationText}
 
@@ -458,13 +458,9 @@ async function retrievalMemoryDemo() {
       console.log(`内容: ${conv.content}`)
     })
 
-    const relevantHistory = retrievedConversations
-      .map((conv) => `轮次: ${conv.round}\n${conv.content}`)
-      .join('\n\n━━━━━\n\n')
+    const relevantHistory = retrievedConversations.map((conv) => `轮次: ${conv.round}\n${conv.content}`).join('\n\n━━━━━\n\n')
 
-    const contextMessages = [
-      new HumanMessage(`相关历史对话:\n${relevantHistory}\n\n用户问题: ${input}`),
-    ]
+    const contextMessages = [new HumanMessage(`相关历史对话:\n${relevantHistory}\n\n用户问题: ${input}`)]
 
     const response = await model.invoke(contextMessages)
     console.log(`助手: ${response.content}`)
@@ -487,6 +483,7 @@ node src/memory/retrieval-memory.mjs
 **问题**: `InMemoryChatMessageHistory` 在长时间运行的服务中会占用大量内存
 
 **解决方案**:
+
 - 使用持久化存储(FileSystemChatMessageHistory、Redis、数据库)
 - 定期清理或截断历史消息
 - 使用总结策略压缩旧对话
@@ -496,6 +493,7 @@ node src/memory/retrieval-memory.mjs
 **问题**: 历史消息过多导致 token 超过模型限制
 
 **解决方案**:
+
 - 使用截断策略限制消息数量
 - 使用 token 计数精确控制上下文长度
 - 使用总结策略压缩历史信息
@@ -505,6 +503,7 @@ node src/memory/retrieval-memory.mjs
 **问题**: AI 总结丢失了关键信息
 
 **解决方案**:
+
 - 优化总结 Prompt,明确要求保留哪些信息
 - 调整 `keepRecent` 参数,保留更多原始消息
 - 使用结构化总结(如提取实体、关系)
@@ -514,6 +513,7 @@ node src/memory/retrieval-memory.mjs
 **问题**: 多个会话同时写入同一个文件导致数据损坏
 
 **解决方案**:
+
 - 为每个会话使用不同的 `sessionId`
 - 使用支持并发的存储后端(如 Redis、数据库)
 - 加文件锁或使用原子写入操作
@@ -523,6 +523,7 @@ node src/memory/retrieval-memory.mjs
 **问题**: Retrieval 策略检索到的历史对话与当前问题无关
 
 **解决方案**:
+
 - 调整 `k` 值返回更多候选结果
 - 过滤低相似度的结果
 - 结合时间窗口(如只检索最近 7 天的对话)

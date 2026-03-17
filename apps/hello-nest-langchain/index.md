@@ -7,7 +7,7 @@ description: 介绍如何在 NestJS 框架中集成 LangChain.js 实现同步和
 
 ## 简介
 
-本项目演示如何在 NestJS 框架中集成 LangChain.js,构建生产级的 AI 服务。通过 NestJS 的模块化架构和依赖注入机制,将 LangChain 的 Chat 模型、Prompt 模板和 Runnable 链封装为可复用的 Service,提供同步调用和 SSE(Server-Sent Events)流式输出两种 API 接口,适合构建 Web 应用和实时��话系统。
+本项目演示如何在 NestJS 框架中集成 LangChain.js,构建生产级的 AI 服务。通过 NestJS 的模块化架构和依赖注入机制,将 LangChain 的 Chat 模型、Prompt 模板和 Runnable 链封装为可复用的 Service,提供同步调用和 SSE(Server-Sent Events)流式输出两种 API 接口,适合构建 Web 应用和实时对话系统。
 
 ## 环境配置
 
@@ -117,6 +117,7 @@ export class AiModule {}
 ```
 
 **关键点**:
+
 - 使用 `useFactory` 动态创建 `ChatOpenAI` 实例
 - 通过 `ConfigService` 读取环境变量
 - 使用注入令牌 `'CHAT_MODEL'` 便于测试和替换
@@ -139,9 +140,7 @@ export class AiService {
   constructor(@Inject('CHAT_MODEL') model: ChatOpenAI) {
     // 构建 Runnable 链
     const prompt = PromptTemplate.fromTemplate('请回答以下问题:\n\n{query}');
-    this.chain = prompt
-      .pipe(model)
-      .pipe(new StringOutputParser());
+    this.chain = prompt.pipe(model).pipe(new StringOutputParser());
   }
 
   // 同步调用
@@ -160,6 +159,7 @@ export class AiService {
 ```
 
 **关键点**:
+
 - 在构造函数中构建 Runnable 链,避免重复创建
 - `runChain` 返回完整结果
 - `streamChain` 使用 AsyncGenerator 实现流式输出
@@ -195,6 +195,7 @@ export class AiController {
 ```
 
 **关键点**:
+
 - `@Get('chat')` 定义同步接口,返回完整结果
 - `@Sse('chat/stream')` 定义 SSE 流式接口
 - 使用 RxJS 的 `from` 和 `map` 将 AsyncGenerator 转换为 Observable
@@ -230,6 +231,7 @@ export class AppModule {}
 ```
 
 **关键点**:
+
 - `ConfigModule.forRoot()` 全局加载环境变量
 - `ServeStaticModule` 提供静态文件服务(用于测试页面)
 
@@ -267,9 +269,11 @@ curl "http://localhost:3000/ai/chat?query=什么是LangChain?"
 #### 使用 JavaScript
 
 ```javascript
-const response = await fetch('http://localhost:3000/ai/chat?query=什么是LangChain?')
-const data = await response.json()
-console.log(data.answer)
+const response = await fetch(
+  'http://localhost:3000/ai/chat?query=什么是LangChain?',
+);
+const data = await response.json();
+console.log(data.answer);
 ```
 
 ### 示例 2:流式对话接口(SSE)
@@ -290,32 +294,32 @@ console.log(data.answer)
     <div id="output"></div>
 
     <script>
-      const queryInput = document.getElementById('query')
-      const btn = document.getElementById('btn')
-      const output = document.getElementById('output')
+      const queryInput = document.getElementById('query');
+      const btn = document.getElementById('btn');
+      const output = document.getElementById('output');
 
       btn.addEventListener('click', () => {
-        const q = queryInput.value.trim()
-        if (!q) return
+        const q = queryInput.value.trim();
+        if (!q) return;
 
-        const url = `http://localhost:3000/ai/chat/stream?query=${encodeURIComponent(q)}`
-        output.textContent = ''
-        btn.disabled = true
+        const url = `http://localhost:3000/ai/chat/stream?query=${encodeURIComponent(q)}`;
+        output.textContent = '';
+        btn.disabled = true;
 
         // 创建 EventSource 连接
-        const eventSource = new EventSource(url)
+        const eventSource = new EventSource(url);
 
         // 接收消息
         eventSource.onmessage = ({ data }) => {
-          output.textContent += data
-        }
+          output.textContent += data;
+        };
 
         // 连接结束
         eventSource.onerror = () => {
-          eventSource.close()
-          btn.disabled = false
-        }
-      })
+          eventSource.close();
+          btn.disabled = false;
+        };
+      });
     </script>
   </body>
 </html>
@@ -443,10 +447,10 @@ Server-Sent Events 流,每个事件包含一个文本片段
 **示例**:
 
 ```javascript
-const eventSource = new EventSource('/ai/chat/stream?query=什么是LangChain?')
+const eventSource = new EventSource('/ai/chat/stream?query=什么是LangChain?');
 eventSource.onmessage = ({ data }) => {
-  console.log(data) // 逐字输出
-}
+  console.log(data); // 逐字输出
+};
 ```
 
 ## 常见问题
@@ -456,6 +460,7 @@ eventSource.onmessage = ({ data }) => {
 **问题**: 报错 `OPENAI_API_KEY is not defined`
 
 **解决方案**:
+
 - 确保 `.env` 文件位于项目根目录
 - 检查 `ConfigModule.forRoot()` 是否正确配置
 - 重启服务以重新加载环境变量
@@ -465,6 +470,7 @@ eventSource.onmessage = ({ data }) => {
 **问题**: EventSource 连接建立后立即关闭
 
 **解决方案**:
+
 - 检查 `streamChain()` 是否正确 yield 数据
 - 确保没有在 generator 中提前 return
 - 使用 `from()` 将 AsyncGenerator 转换为 RxJS Observable
@@ -500,6 +506,7 @@ bootstrap();
 **问题**: SSE 输出的中文显示为乱码
 
 **解决方案**:
+
 - 确保响应头包含 `Content-Type: text/event-stream; charset=utf-8`
 - 检查 `StringOutputParser` 是否正确处理 UTF-8 编码
 
@@ -508,6 +515,7 @@ bootstrap();
 **问题**: 报错 `Cannot resolve dependency 'CHAT_MODEL'`
 
 **解决方案**:
+
 - 检查 `@Inject('CHAT_MODEL')` 是否与 `provide: 'CHAT_MODEL'` 一致
 - 确保 `AiModule` 已正确导入到 `AppModule`
 

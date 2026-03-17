@@ -2,8 +2,8 @@
 layout: home
 
 hero:
-  name: "LangChain.js"
-  text: "学习教程"
+  name: 'LangChain.js'
+  text: 'Tutorial'
   tagline: 从零开始掌握 LangChain.js Agent 开发，构建生产级 AI 应用
   image:
     src: /hero-image.svg
@@ -92,16 +92,16 @@ features:
 
 ## 模块目录
 
-| 模块 | 功能简介 | 难度 | 文档 |
-|------|---------|------|------|
-| **tool-test** | Tool 工具模块 - 让 LLM 具备行动能力，实现文件操作、命令执行等外部功能 | ⭐⭐ | [查看文档](/apps/tool-test/index) |
-| **rag-test** | RAG 检索增强生成 - 结合向量数据库，让模型基于私有知识库回答问题 | ⭐⭐⭐ | [查看文档](/apps/rag-test/index) |
-| **memory-test** | Memory 对话记忆 - 管理多轮对话历史，实现记忆截断、总结、检索等策略 | ⭐⭐ | [查看文档](/apps/memory-test/index) |
-| **milvus-test** | Milvus 向量数据库 - 高性能向量存储与检索，支持 CRUD 操作和 RAG 集成 | ⭐⭐⭐ | [查看文档](/apps/milvus-test/index) |
-| **output-parser-test** | Output Parser 输出解析器 - 将 LLM 非结构化输出转换为 JSON、XML 等结构化数据 | ⭐⭐ | [查看文档](/apps/output-parser-test/index) |
-| **prompt-template-test** | Prompt Template 提示词模板 - 参数化 Prompt 设计，支持 Few-Shot、Pipeline 等高级模式 | ⭐⭐ | [查看文档](/apps/prompt-template-test/index) |
-| **runnable-test** | Runnable 序列与链 - LangChain 的核心抽象，统一接口组合 Prompt、Model、Parser | ⭐⭐⭐⭐ | [查看文档](/apps/runnable-test/index) |
-| **hello-nest-langchain** | NestJS + LangChain 集成 - 在 NestJS 框架中集成 LangChain，构建生产级 AI 服务 | ⭐⭐⭐⭐ | [查看文档](/apps/hello-nest-langchain/index) |
+| 模块                     | 功能简介                                                                            | 难度     | 文档                                         |
+| ------------------------ | ----------------------------------------------------------------------------------- | -------- | -------------------------------------------- |
+| **tool-test**            | Tool 工具模块 - 让 LLM 具备行动能力，实现文件操作、命令执行等外部功能               | ⭐⭐     | [查看文档](/apps/tool-test/index)            |
+| **rag-test**             | RAG 检索增强生成 - 结合向量数据库，让模型基于私有知识库回答问题                     | ⭐⭐⭐   | [查看文档](/apps/rag-test/index)             |
+| **memory-test**          | Memory 对话记忆 - 管理多轮对话历史，实现记忆截断、总结、检索等策略                  | ⭐⭐     | [查看文档](/apps/memory-test/index)          |
+| **milvus-test**          | Milvus 向量数据库 - 高性能向量存储与检索，支持 CRUD 操作和 RAG 集成                 | ⭐⭐⭐   | [查看文档](/apps/milvus-test/index)          |
+| **output-parser-test**   | Output Parser 输出解析器 - 将 LLM 非结构化输出转换为 JSON、XML 等结构化数据         | ⭐⭐     | [查看文档](/apps/output-parser-test/index)   |
+| **prompt-template-test** | Prompt Template 提示词模板 - 参数化 Prompt 设计，支持 Few-Shot、Pipeline 等高级模式 | ⭐⭐     | [查看文档](/apps/prompt-template-test/index) |
+| **runnable-test**        | Runnable 序列与链 - LangChain 的核心抽象，统一接口组合 Prompt、Model、Parser        | ⭐⭐⭐⭐ | [查看文档](/apps/runnable-test/index)        |
+| **hello-nest-langchain** | NestJS + LangChain 集成 - 在 NestJS 框架中集成 LangChain，构建生产级 AI 服务        | ⭐⭐⭐⭐ | [查看文档](/apps/hello-nest-langchain/index) |
 
 ### 学习路径推荐
 
@@ -133,7 +133,7 @@ features:
 ### 克隆项目
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/jokerwon/agent-tutorial.git
 cd agent-tutorial
 ```
 
@@ -213,19 +213,19 @@ LangChain.js 是一个用于构建 AI 应用程序的开源框架，它提供了
 ┌─────────────────────────────────────────────────────────┐
 │                    LangChain.js                         │
 ├─────────────────────────────────────────────────────────┤
-│  Prompt Template  │  定义提示词模板，参数化输入          │
+│  Prompt Template  │  定义提示词模板，参数化输入         │
 ├─────────────────────────────────────────────────────────┤
 │  Model (LLM)      │  调用 OpenAI、Claude 等 LLM         │
 ├─────────────────────────────────────────────────────────┤
 │  Output Parser    │  将文本输出转为结构化数据           │
 ├─────────────────────────────────────────────────────────┤
-│  Runnable         │  核心抽象，支持链式调用和流式输出    │
+│  Runnable         │  核心抽象，支持链式调用和流式输出   │
 ├─────────────────────────────────────────────────────────┤
-│  Memory           │  管理对话历史，支持多种策略          │
+│  Memory           │  管理对话历史，支持多种策略         │
 ├─────────────────────────────────────────────────────────┤
-│  Tool             │  封装外部功能，让 LLM 能够调用       │
+│  Tool             │  封装外部功能，让 LLM 能够调用      │
 ├─────────────────────────────────────────────────────────┤
-│  RAG              │  检索增强生成，结合知识库回答        │
+│  RAG              │  检索增强生成，结合知识库回答       │
 ├─────────────────────────────────────────────────────────┤
 │  Vector Store     │  向量数据库存储与检索               │
 └─────────────────────────────────────────────────────────┘
@@ -264,7 +264,7 @@ const chainWithRetry = chain.withRetry({ stopAfterAttempt: 3 })
 
 // 降级策略
 const chainWithFallback = primaryModel.withFallbacks({
-  fallbacks: [secondaryModel, localModel]
+  fallbacks: [secondaryModel, localModel],
 })
 ```
 
@@ -296,6 +296,7 @@ const chainWithFallback = primaryModel.withFallbacks({
 **问题**: `Error: API key not found`
 
 **解决方案**:
+
 - 检查 `.env` 文件是否正确配置
 - 确保 `OPENAI_API_KEY` 环境变量已设置
 - 验证 API Key 是否有效且未过期
@@ -305,6 +306,7 @@ const chainWithFallback = primaryModel.withFallbacks({
 **问题**: LLM 响应时间过长
 
 **解决方案**:
+
 - 使用流式输出 `stream()` 提升感知速度
 - 选择响应更快的模型(如 qwen-turbo)
 - 减少 Prompt 长度和输出 token 数
@@ -315,6 +317,7 @@ const chainWithFallback = primaryModel.withFallbacks({
 **问题**: Output Parser 解析失败
 
 **解决方案**:
+
 - 使用 `withStructuredOutput()` 替代手动解析
 - 在 Prompt 中强调输出格式要求
 - 降低 `temperature` 为 0 提高稳定性
@@ -325,6 +328,7 @@ const chainWithFallback = primaryModel.withFallbacks({
 **问题**: Memory 模块导致内存溢出
 
 **解决方案**:
+
 - 使用持久化存储替代内存存储
 - 实现记忆截断或总结策略
 - 限制保存的对话轮数
@@ -335,6 +339,7 @@ const chainWithFallback = primaryModel.withFallbacks({
 **问题**: RAG 检索到的内容不相关
 
 **解决方案**:
+
 - 优化文档分块策略(chunkSize、chunkOverlap)
 - 调整 `k` 值返回更多候选文档
 - 使用更高质量的 Embedding 模型

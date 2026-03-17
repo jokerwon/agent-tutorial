@@ -31,7 +31,7 @@ Runnable 提供统一的接口,让 Prompt、Model、Parser 等组件可以无缝
 
 ### Runnable 接口
 
-���有 Runnable 都实现了以下核心方法:
+所有 Runnable 都实现了以下核心方法:
 
 ```typescript
 interface Runnable {
@@ -55,16 +55,10 @@ interface Runnable {
 
 ```typescript
 // 方式 1: 使用 pipe()
-const chain = promptTemplate
-  .pipe(model)
-  .pipe(outputParser)
+const chain = promptTemplate.pipe(model).pipe(outputParser)
 
 // 方式 2: 使用 RunnableSequence.from()
-const chain = RunnableSequence.from([
-  promptTemplate,
-  model,
-  outputParser
-])
+const chain = RunnableSequence.from([promptTemplate, model, outputParser])
 
 // 调用链
 const result = await chain.invoke({ text: '...' })
@@ -72,16 +66,16 @@ const result = await chain.invoke({ text: '...' })
 
 ### Runnable 类型
 
-| Runnable 类型 | 用途 | 示例场景 |
-|--------------|------|---------|
-| `RunnableSequence` | 顺序执行 | Prompt → Model → Parser |
-| `RunnableLambda` | 自定义函数 | 数据转换、业务逻辑 |
-| `RunnableMap` | 并行执行 | 同时生成多个输出 |
-| `RunnableBranch` | 条件分支 | 根据输入选择不同处理逻辑 |
-| `RunnablePassthrough` | 数据透传 | 保留原始输入 |
-| `RunnableWithRetry` | 重试机制 | 处理不稳定的外部服务 |
-| `RunnableWithFallbacks` | 降级策略 | 高可用服务切换 |
-| `RouterRunnable` | 路由分发 | 动态选择 Runnable |
+| Runnable 类型           | 用途       | 示例场景                 |
+| ----------------------- | ---------- | ------------------------ |
+| `RunnableSequence`      | 顺序执行   | Prompt → Model → Parser  |
+| `RunnableLambda`        | 自定义函数 | 数据转换、业务逻辑       |
+| `RunnableMap`           | 并行执行   | 同时生成多个输出         |
+| `RunnableBranch`        | 条件分支   | 根据输入选择不同处理逻辑 |
+| `RunnablePassthrough`   | 数据透传   | 保留原始输入             |
+| `RunnableWithRetry`     | 重试机制   | 处理不稳定的外部服务     |
+| `RunnableWithFallbacks` | 降级策略   | 高可用服务切换           |
+| `RouterRunnable`        | 路由分发   | 动态选择 Runnable        |
 
 ## 使用示例
 
@@ -113,9 +107,7 @@ const schema = z.object({
 })
 
 const outputParser = StructuredOutputParser.fromZodSchema(schema)
-const promptTemplate = PromptTemplate.fromTemplate(
-  '将以下文本翻译成英文,然后总结为3个关键词。\n\n文本:{text}\n\n{format_instructions}',
-)
+const promptTemplate = PromptTemplate.fromTemplate('将以下文本翻译成英文,然后总结为3个关键词。\n\n文本:{text}\n\n{format_instructions}')
 
 const input = {
   text: 'LangChain 是一个强大的 AI 应用开发框架',
@@ -166,9 +158,7 @@ const schema = z.object({
 })
 
 const outputParser = StructuredOutputParser.fromZodSchema(schema)
-const promptTemplate = PromptTemplate.fromTemplate(
-  '将以下文本翻译成英文,然后总结为3个关键词。\n\n文本:{text}\n\n{format_instructions}',
-)
+const promptTemplate = PromptTemplate.fromTemplate('将以下文本翻译成英文,然后总结为3个关键词。\n\n文本:{text}\n\n{format_instructions}')
 
 // 创建链
 const chain = RunnableSequence.from([promptTemplate, model, outputParser])
@@ -336,11 +326,7 @@ node src/runnables/RunnableBranch.mjs
 
 ```typescript
 import 'dotenv/config'
-import {
-  RunnablePassthrough,
-  RunnableLambda,
-  RunnableSequence,
-} from '@langchain/core/runnables'
+import { RunnablePassthrough, RunnableLambda, RunnableSequence } from '@langchain/core/runnables'
 
 const chain = RunnableSequence.from([
   // 步骤 1: 将字符串转为对象
@@ -571,9 +557,7 @@ const buildPromptInput = new RunnableLambda({
   func: async (input) => {
     const { question, retrievedContent } = input
 
-    const context = retrievedContent
-      .map((item, i) => `[片段 ${i + 1}]\n${item.content}`)
-      .join('\n\n━━━━━\n\n')
+    const context = retrievedContent.map((item, i) => `[片段 ${i + 1}]\n${item.content}`).join('\n\n━━━━━\n\n')
 
     return { question, context }
   },
@@ -592,13 +576,7 @@ const promptTemplate = PromptTemplate.fromTemplate(
 )
 
 // 完整的 RAG 链
-const ragChain = RunnableSequence.from([
-  milvusSearch,
-  buildPromptInput,
-  promptTemplate,
-  model,
-  new StringOutputParser(),
-])
+const ragChain = RunnableSequence.from([milvusSearch, buildPromptInput, promptTemplate, model, new StringOutputParser()])
 
 // 调用链
 const answer = await ragChain.invoke({
@@ -622,6 +600,7 @@ node src/cases/ebook-reader-rag.mjs
 **问题**: Runnable 链中前一个输出类型与后一个输入类型不匹配
 
 **解决方案**:
+
 - 使用 `RunnableLambda` 进行类型转换
 - 检查每个 Runnable 的输入输出类型
 - 使用 TypeScript 类型检查避免运行时错误
@@ -631,6 +610,7 @@ node src/cases/ebook-reader-rag.mjs
 **问题**: RunnableSequence 包含太多步骤,出错时难以定位
 
 **解决方案**:
+
 - 使用 `RunnableLambda` 在关键步骤打印日志
 - 拆分为多个子链,分别测试
 - 使用 LangSmith 或回调函数追踪每步执行
@@ -646,6 +626,7 @@ node src/cases/ebook-reader-rag.mjs
 **问题**: RunnableWithRetry 重试时会重复执行副作用(如发送邮件)
 
 **解决方案**:
+
 - 将副作用操作移到重试逻辑之外
 - 使用幂等性设计,避免重复执行的影响
 - 限制重试次数,避免过度重试
@@ -655,6 +636,7 @@ node src/cases/ebook-reader-rag.mjs
 **问题**: withFallbacks 只捕获异常,不捕获无效返回值
 
 **解决方案**:
+
 - 在 Runnable 中抛出异常而非返回无效值
 - 使用自定义验证逻辑,不满足条件时抛出异常
 

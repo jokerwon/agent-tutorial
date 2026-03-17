@@ -80,7 +80,7 @@ await client.createCollection({
 
 ### Embedding 嵌入向量
 
-Embedding 是将���本转换为高维向量的过程,语义相似的文本向量距离更近:
+Embedding 是将文本转换为高维向量的过程,语义相似的文本向量距离更近:
 
 ```typescript
 import { OpenAIEmbeddings } from '@langchain/openai'
@@ -680,6 +680,7 @@ node src/ebook-reader-rag.mjs
 **问题**: 无法连接到 Milvus 服务器
 
 **解决方案**:
+
 - 检查 Milvus 容器是否正在运行: `docker ps | grep milvus`
 - 验证端口是否开放: `telnet localhost 19530`
 - 查看 Milvus 日志: `docker logs milvus-standalone`
@@ -689,6 +690,7 @@ node src/ebook-reader-rag.mjs
 **问题**: 插入数据时报错"dimension not match"
 
 **解决方案**:
+
 - 确保 Embedding 模型的 `dimensions` 参数与 Collection 的 `dim` 一致
 - 常用维度: OpenAI `text-embedding-3-small` = 1536, `text-embedding-v3` 可自定义(如 1024)
 
@@ -697,6 +699,7 @@ node src/ebook-reader-rag.mjs
 **问题**: 向量搜索响应时间长
 
 **解决方案**:
+
 - 创建合适的索引类型(IVF_FLAT、IVF_SQ8、HNSW)
 - 调整索引参数(如 `nlist`)
 - 增加 `limit` 值以减少计算量
@@ -707,6 +710,7 @@ node src/ebook-reader-rag.mjs
 **问题**: Milvus 占用大量内存
 
 **解决方案**:
+
 - 使用 IVF_SQ8 索引进行向量压缩
 - 启用数据落盘(Release Collection)
 - 调整 `cache.insert_rate` 参数
@@ -717,6 +721,7 @@ node src/ebook-reader-rag.mjs
 **问题**: 容器重启后数据丢失
 
 **解决方案**:
+
 - 使用 Docker Volume 挂载数据目录:
   ```bash
   docker run -d --name milvus \

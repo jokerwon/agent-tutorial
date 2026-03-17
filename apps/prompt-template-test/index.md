@@ -58,13 +58,13 @@ const template = PromptTemplate.fromTemplate(`
 
 ### 模板类型
 
-| Template 类型 | 用途 | 输出格式 |
-|--------------|------|---------|
-| `PromptTemplate` | 单轮文本提示词 | 字符串 |
-| `ChatPromptTemplate` | 多轮对话消息 | 消息数组 |
-| `FewShotPromptTemplate` | 少样本学习 | 字符串 |
-| `PipelinePromptTemplate` | 模块化组合 | 字符串 |
-| `MessagesPlaceholder` | 动态消息占位 | 消息数组 |
+| Template 类型            | 用途           | 输出格式 |
+| ------------------------ | -------------- | -------- |
+| `PromptTemplate`         | 单轮文本提示词 | 字符串   |
+| `ChatPromptTemplate`     | 多轮对话消息   | 消息数组 |
+| `FewShotPromptTemplate`  | 少样本学习     | 字符串   |
+| `PipelinePromptTemplate` | 模块化组合     | 字符串   |
+| `MessagesPlaceholder`    | 动态消息占位   | 消息数组 |
 
 ## 使用示例
 
@@ -197,10 +197,7 @@ const chatMessages = await chatPrompt.formatMessages({
   manager_name: '王总',
   week_range: '2025-05-05 ~ 2025-05-11',
   team_goal: '完成内部 AI 助手灰度上线,并确保核心链路稳定。',
-  dev_activities:
-    '- 小李:完成 AI 助手工单流转能力,对接客服系统,提交 25 次\n' +
-    '- 小张:接入日志检索和知识库查询,提交 19 次\n' +
-    '- 小王:完善监控、告警与埋点,新增 10 条核心告警规则',
+  dev_activities: '- 小李:完成 AI 助手工单流转能力,对接客服系统,提交 25 次\n' + '- 小张:接入日志检索和知识库查询,提交 19 次\n' + '- 小王:完善监控、告警与埋点,新增 10 条核心告警规则',
 })
 
 console.log('ChatPromptTemplate 生成的消息:')
@@ -361,10 +358,7 @@ const pipelineFormatted = await pipelinePrompt.format({
   manager_name: '刘东',
   week_range: '2025-02-10 ~ 2025-02-16',
   team_goal: '上线周报 Agent 到内部试用环境,并收集反馈。',
-  dev_activities:
-    '- 小明:完成 Git/Jira 集成封装\n' +
-    '- 小红:实现 Prompt 配置化加载\n' +
-    '- 小强:接入权限系统,支持按部门过滤数据',
+  dev_activities: '- 小明:完成 Git/Jira 集成封装\n' + '- 小红:实现 Prompt 配置化加载\n' + '- 小强:接入权限系统,支持按部门过滤数据',
   company_values: '「极致、开放、靠谱」的价值观',
 })
 
@@ -405,8 +399,7 @@ const examplePrompt = PromptTemplate.fromTemplate(
   `用户输入:{user_requirement}
 期望周报结构:{expected_style}
 模型示例输出片段:
-{report_snippet}
----`,
+{report_snippet}`,
 )
 
 // 准备示例数据
@@ -550,16 +543,14 @@ const examplePrompt = PromptTemplate.fromTemplate(
   `用户需求:{user_requirement}
 周报片段示例:
 {report_snippet}
----`,
+`,
 )
 
 // 准备不同长度的示例
 const examples = [
   {
     user_requirement: '本周主要在做基础设施稳定性治理,想突出风险控制。',
-    report_snippet:
-      `- 核心链路共处理 P1 级别故障 1 起,P2 故障 2 起,均在 SLA 内完成处置;\n` +
-      `- 对 5 个高风险接口补充了限流与熔断策略,覆盖 80% 高峰流量;`,
+    report_snippet: `- 核心链路共处理 P1 级别故障 1 起,P2 故障 2 起,均在 SLA 内完成处置;\n` + `- 对 5 个高风险接口补充了限流与熔断策略,覆盖 80% 高峰流量;`,
   },
   {
     user_requirement: '偏向对外展示成果,希望多写一些亮点。',
@@ -615,6 +606,7 @@ node src/example-selector1.mjs
 **问题**: 输出中仍有 `{variable_name}` 未被替换
 
 **解决方案**:
+
 - 检查 `format()` 传入的对象是否包含所有变量
 - 使用 `template.inputVariables` 查看模板需要的变量列表
 - 使用 `.partial()` 预填充部分变量
@@ -624,14 +616,16 @@ node src/example-selector1.mjs
 **问题**: 变量值包含 `{` 或 `}` 字符导致解析错误
 
 **解决方案**:
-- 使用双大括号转义: `{{` 和 `}}`
-- 或在模板中使用反斜杠: `\{` 和 `\}`
+
+- 使用双大括号转义: <span v-pre>`{{` 和 `}}`</span>
+- 或在模板中使用反斜杠进行转义: `\{` 和 `\}`
 
 ### 3. 模板过长
 
 **问题**: PipelinePromptTemplate 组合后的 Prompt 超过 token 限制
 
 **解决方案**:
+
 - 减少不必要的模块
 - 使用 `partial()` 预填充固定内容,减少动态部分
 - 精简每个子模块的文本
@@ -641,6 +635,7 @@ node src/example-selector1.mjs
 **问题**: LengthBasedExampleSelector 选择的示例与输入不相关
 
 **解决方案**:
+
 - 增加 `maxLength` 以包含更多示例
 - 使用 `SemanticSimilarityExampleSelector` 基于语义相似度选择
 - 手动筛选高质量示例
@@ -650,6 +645,7 @@ node src/example-selector1.mjs
 **问题**: MessagesPlaceholder 插入的历史消息格式不正确
 
 **解决方案**:
+
 - 确保历史消息格式为 `{ role: 'human' | 'ai', content: string }`
 - 使用 `toChatMessages()` 转换为模型接受的格式
 - 检查消息顺序是否正确
