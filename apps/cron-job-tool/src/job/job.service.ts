@@ -9,6 +9,7 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 import { EntityManager } from 'typeorm';
 import { Job } from './entities/job.entity';
+import { JobAgentService } from 'src/ai/job-agent.service';
 
 @Injectable()
 export class JobService implements OnApplicationBootstrap {
@@ -19,6 +20,9 @@ export class JobService implements OnApplicationBootstrap {
 
   @Inject(SchedulerRegistry)
   private readonly schedulerRegistry: SchedulerRegistry;
+
+  @Inject(JobAgentService)
+  private readonly jobAgentService: JobAgentService;
 
   async onApplicationBootstrap() {
     const enabledJobs = await this.entityManager.find(Job, {
@@ -151,6 +155,15 @@ export class JobService implements OnApplicationBootstrap {
             await this.entityManager.update(Job, job.id, {
               lastRun: new Date(),
             });
+
+            try {
+              const result = await this.jobAgentService.runJob(job.instruction);
+              this.logger.log(`[Job ${job.id}] result: ${result}`);
+            } catch (error) {
+              this.logger.error(
+                `[Job ${job.id}] agent execution error: ${(error as Error).message}`,
+              );
+            }
           })(),
         job.everyMs,
       );
@@ -176,6 +189,16 @@ export class JobService implements OnApplicationBootstrap {
               lastRun: new Date(),
               isEnabled: false, // at 类型只执行一次：执行完自动停用
             });
+
+            try {
+              const result = await this.jobAgentService.runJob(job.instruction);
+              this.logger.log(`[Job ${job.id}] result: ${result}`);
+            } catch (error) {
+              this.logger.error(
+                `[Job ${job.id}] agent execution error: ${(error as Error).message}`,
+              );
+            }
+
             try {
               this.schedulerRegistry.deleteTimeout(job.id);
             } catch {
@@ -222,6 +245,15 @@ export class JobService implements OnApplicationBootstrap {
     return new CronJob(cronExpr, async () => {
       this.logger.log(`run job ${job.id}, ${job.instruction}`);
       await this.entityManager.update(Job, job.id, { lastRun: new Date() });
+
+      try {
+        const result = await this.jobAgentService.runJob(job.instruction);
+        this.logger.log(`[Job ${job.id}] result: ${result}`);
+      } catch (error) {
+        this.logger.error(
+          `[Job ${job.id}] agent execution error: ${(error as Error).message}`,
+        );
+      }
     });
   }
 }

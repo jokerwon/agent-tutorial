@@ -25,6 +25,11 @@ export class AiService {
     private readonly dbUsersCrudTool: Tool<string>,
     @Inject('CRON_JOB_TOOL')
     private readonly cronJobTool: Tool<string>,
+    @Inject('TIME_NOW_TOOL')
+    private readonly timeNowTool: Tool<{
+      iso: string;
+      timestamp: number;
+    }>,
   ) {
     this.modelWithTools = model.bindTools([
       this.queryUserTool,
@@ -32,6 +37,7 @@ export class AiService {
       this.webSearchTool,
       this.dbUsersCrudTool,
       this.cronJobTool,
+      this.timeNowTool,
     ]);
   }
 
@@ -104,6 +110,15 @@ export class AiService {
               tool_call_id: toolCallId,
               name: toolName,
               content: result,
+            }),
+          );
+        } else if (toolName === 'time_now') {
+          const result = await this.timeNowTool.invoke({});
+          messages.push(
+            new ToolMessage({
+              tool_call_id: toolCallId,
+              name: toolName,
+              content: JSON.stringify(result),
             }),
           );
         }
@@ -215,6 +230,16 @@ export class AiService {
               tool_call_id: toolCallId,
               name: toolName,
               content: result,
+            }),
+          );
+        } else if (toolName === 'time_now') {
+          this.logger.log('Calling Tool: time_now');
+          const result = await this.timeNowTool.invoke({});
+          messages.push(
+            new ToolMessage({
+              tool_call_id: toolCallId,
+              name: toolName,
+              content: JSON.stringify(result),
             }),
           );
         }

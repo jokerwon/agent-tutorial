@@ -1,4 +1,4 @@
-import { Inject, Module, OnApplicationBootstrap } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AiModule } from './ai/ai.module';
@@ -9,12 +9,7 @@ import { join } from 'path';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
-import {
-  CronExpression,
-  ScheduleModule,
-  SchedulerRegistry,
-} from '@nestjs/schedule';
-import { CronJob } from 'cron';
+import { ScheduleModule } from '@nestjs/schedule';
 import { JobModule } from './job/job.module';
 import { Job } from './job/entities/job.entity';
 
@@ -64,18 +59,4 @@ import { Job } from './job/entities/job.entity';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule implements OnApplicationBootstrap {
-  @Inject()
-  schedulerRegistry: SchedulerRegistry;
-
-  onApplicationBootstrap() {
-    // const job = new CronJob(CronExpression.EVERY_SECOND, () => {
-    //   console.log('cron jon');
-    // });
-    // this.schedulerRegistry.addCronJob('job1', job);
-    // job.start();
-    // setTimeout(() => {
-    //   this.schedulerRegistry.deleteCronJob('job1');
-    // }, 5e3);
-  }
-}
+export class AppModule {}
