@@ -43,3 +43,6 @@ next-env.d.ts
 # vitepress
 .vitepress/dist
 .vitepress/cache
+
+# Docker
+volumes
